@@ -1,0 +1,67 @@
+# Kubernetes Deployment API version
+apiVersion: apps/v1
+
+# Resource type is Deployment
+kind: Deployment
+
+metadata:
+  # Name of the Deployment
+  name: backend-learning
+
+  # Labels used to identify this Deployment
+  labels:
+    app: backend-learning
+
+spec:
+  # Number of pod replicas to run
+  replicas: 1
+
+  # Selector to match pods managed by this Deployment
+  selector:
+    matchLabels:
+      app: backend-learning
+
+  # Template used to create pods
+  template:
+    metadata:
+      # Labels assigned to the pods
+      labels:
+        app: backend-learning
+
+    spec:
+      containers:
+        # Container name inside the pod
+        - name: backend-learning
+
+          # Docker image to be pulled from Docker Hub
+          image: roopdawar/learndevops:latest
+
+          # Always pull the latest image when pod starts
+          imagePullPolicy: Always
+
+          ports:
+            # Application listens on port 5000 inside the container
+            - containerPort: 5000
+
+          env:
+            # Application port environment variable
+            - name: PORT
+              value: "5000"
+
+            # MongoDB connection string fetched from Kubernetes Secret
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  # Secret name
+                  name: backend-secrets
+                  # Key inside the secret
+                  key: MONGO_URI
+
+            # JWT secret fetched securely from Kubernetes Secret
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  # Secret name
+                  name: backend-secrets
+                  # Key inside the secret
+                  key: JWT_SECRET

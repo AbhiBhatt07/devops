@@ -1,0 +1,27 @@
+# Kubernetes Service API version
+apiVersion: v1
+
+# Resource type is Service
+kind: Service
+
+metadata:
+  # Name of the Service
+  name: backend-learning-service
+
+spec:
+  # Selects pods having this label
+  selector:
+    app: backend-learning
+
+  ports:
+    # Communication protocol
+    - protocol: TCP
+
+      # Port exposed by the Service inside the cluster
+      port: 80
+
+      # Port on which the application is running inside the container
+      targetPort: 5000
+
+  # Exposes the application outside the cluster using a NodePort
+  type: NodePort
